@@ -5,13 +5,11 @@ import { VahanData, IdspData, PopulationData, AqiData } from '@/types/data';
 const dataCache = new Map<string, any[]>();
 
 // Configuration for Papa Parse with optimized settings
-const PAPA_CONFIG = {
+const PAPA_CONFIG: Papa.ParseConfig = {
   header: true,
   skipEmptyLines: true,
   transformHeader: (header: string) => header.trim().toLowerCase().replace(/\s+/g, '_'),
   dynamicTyping: true, // Automatically convert numbers
-  fastMode: true, // Use fast mode for better performance
-  worker: false, // Disable worker for better compatibility
 };
 
 export class CSVLoader {
@@ -282,7 +280,7 @@ export class CSVLoader {
         idsp: data.idsp.length,
         population: data.population.length,
         aqi: data.aqi.length,
-        totalRecords: Object.values(data).reduce((sum: number, arr: any[]) => sum + arr.length, 0)
+        totalRecords: data.vahan.length + data.idsp.length + data.population.length + data.aqi.length
       });
 
       return data;

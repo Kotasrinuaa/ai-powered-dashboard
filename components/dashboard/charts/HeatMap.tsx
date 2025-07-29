@@ -17,8 +17,8 @@ interface HeatMapProps {
 export function HeatMap({ data, title, gradient = 'from-blue-500/20 to-purple-500/20' }: HeatMapProps) {
   if (!data.length) return null;
 
-  const xLabels = [...new Set(data.map(d => d.x))];
-  const yLabels = [...new Set(data.map(d => d.y))];
+  const xLabels = Array.from(new Set(data.map(d => d.x)));
+  const yLabels = Array.from(new Set(data.map(d => d.y)));
   const values = data.map(d => d.value);
   const minValue = Math.min(...values);
   const maxValue = Math.max(...values);

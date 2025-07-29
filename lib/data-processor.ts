@@ -76,10 +76,10 @@ export class DataProcessor {
   }
 
   static getUniqueValues<T>(data: T[], key: keyof T): string[] {
-    return [...new Set(data.map(item => String(item[key])).filter(Boolean))].sort();
+    return Array.from(new Set(data.map(item => String(item[key])).filter(Boolean))).sort();
   }
 
   static getUniqueNumbers<T>(data: T[], key: keyof T): number[] {
-    return [...new Set(data.map(item => Number(item[key])).filter(n => !isNaN(n)))].sort((a, b) => a - b);
+    return Array.from(new Set(data.map(item => Number(item[key])).filter(n => !isNaN(n)))).sort((a, b) => a - b);
   }
 }
