@@ -28,7 +28,7 @@ export function PieChart({
     <Card className={`p-6 bg-gradient-to-br ${gradient} border-gray-700/50 backdrop-blur-sm hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300`}>
       <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
       <div className="h-80">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" as="div">
           <RechartsPieChart>
             <Pie
               data={data}
