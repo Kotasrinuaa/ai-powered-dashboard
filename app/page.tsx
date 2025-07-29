@@ -5,16 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { FilterSidebar } from '@/components/dashboard/FilterSidebar';
 import { MetricCard } from '@/components/dashboard/MetricCard';
-import { BarChart } from '@/components/dashboard/charts/BarChart';
-import { LineChart } from '@/components/dashboard/charts/LineChart';
-import { PieChart } from '@/components/dashboard/charts/PieChart';
-import { AreaChart } from '@/components/dashboard/charts/AreaChart';
-import { ScatterChart } from '@/components/dashboard/charts/ScatterChart';
-import { HeatMap } from '@/components/dashboard/charts/HeatMap';
-import { TreeMap } from '@/components/dashboard/charts/TreeMap';
-import { RadarChart } from '@/components/dashboard/charts/RadarChart';
-import { BubbleChart } from '@/components/dashboard/charts/BubbleChart';
-import { BoxPlot } from '@/components/dashboard/charts/BoxPlot';
 import { AIInsights } from '@/components/dashboard/AIInsights';
 import { DataSummary } from '@/components/dashboard/DataSummary';
 import { useEnhancedDataAnalysis } from '@/hooks/useEnhancedDataAnalysis';
@@ -181,102 +171,78 @@ export default function Dashboard() {
                   />
                 </div>
 
-                {/* Primary Charts */}
+                {/* Data Summary Cards */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <BarChart
-                    data={analytics.vehicleByClass}
-                    title="Vehicle Distribution by Class"
-                    xKey="name"
-                    yKey="value"
-                    color="#3b82f6"
-                    gradient="from-blue-500/20 to-cyan-500/20"
-                  />
+                  <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-gray-700/50 rounded-lg p-6 backdrop-blur-sm">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5" />
+                      Vehicle Distribution by Class
+                    </h3>
+                    <div className="space-y-3">
+                      {analytics.vehicleByClass?.slice(0, 5).map((item, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-white/80">{item.name}</span>
+                          <span className="text-white font-semibold">{item.value.toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                   
-                  <PieChart
-                    data={analytics.aqiByStatus}
-                    title="Air Quality Status Distribution"
-                    dataKey="value"
-                    nameKey="name"
-                    gradient="from-green-500/20 to-emerald-500/20"
-                  />
+                  <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-gray-700/50 rounded-lg p-6 backdrop-blur-sm">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                      <PieChartIcon className="w-5 h-5" />
+                      Air Quality Status Distribution
+                    </h3>
+                    <div className="space-y-3">
+                      {analytics.aqiByStatus?.slice(0, 5).map((item, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-white/80">{item.name}</span>
+                          <span className="text-white font-semibold">{item.value.toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <BarChart
-                    data={analytics.diseasesByState}
-                    title="Disease Cases by State"
-                    xKey="name"
-                    yKey="value"
-                    color="#ef4444"
-                    gradient="from-red-500/20 to-pink-500/20"
-                  />
+                  <div className="bg-gradient-to-br from-red-500/20 to-pink-500/20 border border-gray-700/50 rounded-lg p-6 backdrop-blur-sm">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                      <Activity className="w-5 h-5" />
+                      Disease Cases by State
+                    </h3>
+                    <div className="space-y-3">
+                      {analytics.diseasesByState?.slice(0, 5).map((item, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-white/80">{item.name}</span>
+                          <span className="text-white font-semibold">{item.value.toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                   
-                  <AreaChart
-                    data={data.vahan.map(item => ({
-                      month: `${item.year}-${item.month.toString().padStart(2, '0')}`,
-                      value: item.value
-                    }))}
-                    title="Vehicle Registration Trends"
-                    xKey="month"
-                    yKey="value"
-                    color="#f59e0b"
-                    gradient="from-yellow-500/20 to-orange-500/20"
-                  />
+                  <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-gray-700/50 rounded-lg p-6 backdrop-blur-sm">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5" />
+                      Vehicle Registration Trends
+                    </h3>
+                    <div className="space-y-3">
+                      {data.vahan?.slice(0, 5).map((item, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-white/80">{`${item.year}-${item.month.toString().padStart(2, '0')}`}</span>
+                          <span className="text-white font-semibold">{item.value.toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </TabsContent>
 
               {/* Deep Dive Tab */}
               <TabsContent value="deep-dive" className="space-y-8 mt-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <HeatMap
-                    data={analytics.diseaseHeatmapData}
-                    title="Disease Intensity Heatmap"
-                    gradient="from-red-500/20 to-orange-500/20"
-                  />
-                  
-                  <TreeMap
-                    data={analytics.vehicleByClass}
-                    title="Vehicle Class Distribution"
-                    gradient="from-blue-500/20 to-purple-500/20"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <BubbleChart
-                    data={analytics.bubbleData}
-                    title="AQI vs Population vs Deaths"
-                    xLabel="AQI Value"
-                    yLabel="Population"
-                    gradient="from-cyan-500/20 to-blue-500/20"
-                  />
-                  
-                  <RadarChart
-                    data={analytics.radarData}
-                    title="Multi-Metric Comparison"
-                    dataKey="value"
-                    gradient="from-indigo-500/20 to-purple-500/20"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <BoxPlot
-                    data={analytics.boxPlotData}
-                    title="AQI Distribution by Status"
-                    gradient="from-teal-500/20 to-cyan-500/20"
-                  />
-                  
-                  <ScatterChart
-                    data={data.aqi.map(item => ({
-                      aqi_value: item.aqi_value,
-                      monitoring_stations: item.number_of_monitoring_stations,
-                      area: item.area
-                    }))}
-                    title="AQI vs Monitoring Stations"
-                    xKey="monitoring_stations"
-                    yKey="aqi_value"
-                    color="#ec4899"
-                    gradient="from-pink-500/20 to-rose-500/20"
-                  />
+                <div className="text-center py-12">
+                  <BarChart3 className="w-16 h-16 text-blue-400 mx-auto mb-4" />
+                  <h3 className="text-2xl font-semibold text-white mb-2">Advanced Analytics</h3>
+                  <p className="text-gray-400">Interactive charts and visualizations coming soon!</p>
                 </div>
               </TabsContent>
 
