@@ -237,26 +237,38 @@ export class CSVLoader {
     const startTime = performance.now();
     
     try {
-      console.log('Starting CSV data loading...');
+      console.log('CSVLoader: Starting CSV data loading...');
       
       // Load all CSV files in parallel with progress tracking
       const loadPromises = [
         this.loadCSVWithRetry('/data/vahan.csv').then(csv => ({
           type: 'vahan',
           data: this.parseCSVWithCache(csv, this.transformVahanData, 'vahan')
-        })),
+        })).catch(error => {
+          console.error('CSVLoader: Failed to load vahan.csv:', error);
+          return { type: 'vahan', data: [] };
+        }),
         this.loadCSVWithRetry('/data/idsp.csv').then(csv => ({
           type: 'idsp',
           data: this.parseCSVWithCache(csv, this.transformIdspData, 'idsp')
-        })),
+        })).catch(error => {
+          console.error('CSVLoader: Failed to load idsp.csv:', error);
+          return { type: 'idsp', data: [] };
+        }),
         this.loadCSVWithRetry('/data/population_projection.csv').then(csv => ({
           type: 'population',
           data: this.parseCSVWithCache(csv, this.transformPopulationData, 'population')
-        })),
+        })).catch(error => {
+          console.error('CSVLoader: Failed to load population_projection.csv:', error);
+          return { type: 'population', data: [] };
+        }),
         this.loadCSVWithRetry('/data/aqi.csv').then(csv => ({
           type: 'aqi',
           data: this.parseCSVWithCache(csv, this.transformAqiData, 'aqi')
-        }))
+        })).catch(error => {
+          console.error('CSVLoader: Failed to load aqi.csv:', error);
+          return { type: 'aqi', data: [] };
+        })
       ];
 
       const results = await Promise.allSettled(loadPromises);
@@ -275,18 +287,18 @@ export class CSVLoader {
         
         if (result.status === 'fulfilled') {
           data[fileType] = result.value.data;
-          console.log(`✓ Loaded ${fileType}: ${result.value.data.length} records`);
+          console.log(`CSVLoader: ✓ Loaded ${fileType}: ${result.value.data.length} records`);
         } else {
-          console.error(`✗ Failed to load ${fileType}:`, result.reason);
+          console.error(`CSVLoader: ✗ Failed to load ${fileType}:`, result.reason);
           // Keep empty array as fallback
         }
       });
 
       const endTime = performance.now();
-      console.log(`Data loading completed in ${(endTime - startTime).toFixed(2)}ms`);
+      console.log(`CSVLoader: Data loading completed in ${(endTime - startTime).toFixed(2)}ms`);
       
       // Log summary statistics
-      console.log('Data Summary:', {
+      console.log('CSVLoader: Data Summary:', {
         vahan: data.vahan.length,
         idsp: data.idsp.length,
         population: data.population.length,
@@ -296,7 +308,7 @@ export class CSVLoader {
 
       return data;
     } catch (error) {
-      console.error('Critical error loading CSV data:', error);
+      console.error('CSVLoader: Critical error loading CSV data:', error);
       // Return empty arrays as fallback
       return {
         vahan: [],
@@ -319,5 +331,30 @@ export class CSVLoader {
       size: dataCache.size,
       keys: Array.from(dataCache.keys()),
     };
+  }
+
+  // Test function to check if CSV files are accessible
+  static async testFileAccess(): Promise<{ [key: string]: boolean }> {
+    const files = [
+      '/data/vahan.csv',
+      '/data/idsp.csv', 
+      '/data/population_projection.csv',
+      '/data/aqi.csv'
+    ];
+    
+    const results: { [key: string]: boolean } = {};
+    
+    for (const file of files) {
+      try {
+        const response = await fetch(file, { method: 'HEAD' });
+        results[file] = response.ok;
+        console.log(`CSVLoader: File access test for ${file}: ${response.ok ? 'OK' : 'FAILED'}`);
+      } catch (error) {
+        results[file] = false;
+        console.error(`CSVLoader: File access test failed for ${file}:`, error);
+      }
+    }
+    
+    return results;
   }
 }

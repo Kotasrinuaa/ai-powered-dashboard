@@ -60,6 +60,20 @@ export class DataManager {
       console.log('DataManager: Starting data load...');
       const startTime = performance.now();
       
+      // Test file access first
+      console.log('DataManager: Testing file access...');
+      const fileAccess = await CSVLoader.testFileAccess();
+      console.log('DataManager: File access results:', fileAccess);
+      
+      // Check if any files are accessible
+      const accessibleFiles = Object.values(fileAccess).filter(Boolean).length;
+      if (accessibleFiles === 0) {
+        console.warn('DataManager: No CSV files accessible, using mock data');
+        this.loadMockData();
+        this.isLoaded = true;
+        return;
+      }
+      
       // Use the optimized CSV loader with timeout
       const loadPromise = CSVLoader.loadAllData();
       const timeoutPromise = new Promise((_, reject) => 
@@ -94,6 +108,7 @@ export class DataManager {
       console.error('DataManager: Error loading data:', error);
       // Use fallback mock data
       this.loadMockData();
+      this.isLoaded = true; // Mark as loaded even with mock data
     }
   }
 
