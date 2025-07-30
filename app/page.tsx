@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
-// Dynamically import the dashboard with no SSR
+// Dynamically import the dashboard with optimized settings
 const DashboardClient = dynamic(() => import('./DashboardClient'), {
   ssr: false,
   loading: () => (

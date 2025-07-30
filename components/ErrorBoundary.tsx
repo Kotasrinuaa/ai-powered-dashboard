@@ -31,6 +31,16 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Error name:', error.name);
     console.error('Error message:', error.message);
     console.error('Component stack:', errorInfo.componentStack);
+    
+    // Handle chunk loading errors specifically
+    if (error.name === 'ChunkLoadError' || error.message.includes('Loading chunk')) {
+      console.error('Chunk loading error detected - attempting recovery...');
+      // Force a page reload to recover from chunk loading issues
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    }
+    
     this.setState({ error, errorInfo });
   }
 
@@ -48,16 +58,21 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
+      const isChunkError = this.state.error?.name === 'ChunkLoadError' || 
+                          this.state.error?.message?.includes('Loading chunk');
+
       return (
         <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
           <div className="text-center max-w-md">
             <AlertTriangle className="w-16 h-16 text-red-400 mx-auto mb-4" />
             <h2 className="text-2xl font-semibold mb-2 text-red-400">
-              Something went wrong
+              {isChunkError ? 'Loading Issue Detected' : 'Something went wrong'}
             </h2>
             <p className="text-gray-400 mb-6">
-              We encountered an unexpected error while loading the dashboard. 
-              This might be due to a temporary issue with data loading.
+              {isChunkError 
+                ? 'We detected a loading issue with the dashboard. The page will automatically reload to fix this.'
+                : 'We encountered an unexpected error while loading the dashboard. This might be due to a temporary issue with data loading.'
+              }
             </p>
             
             {process.env.NODE_ENV === 'development' && this.state.error && (

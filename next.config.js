@@ -4,6 +4,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
+  // Optimize output
+  swcMinify: true,
 };
 
 module.exports = nextConfig;
