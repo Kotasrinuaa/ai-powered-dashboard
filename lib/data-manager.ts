@@ -113,53 +113,55 @@ export class DataManager {
   }
 
   private loadMockData(): void {
-    console.log('DataManager: Loading mock data as fallback...');
+    console.log('DataManager: Loading comprehensive mock data as fallback...');
     
-    // Enhanced mock data with more realistic patterns
-    this.vahanData = [
-      { state: 'Maharashtra', district: 'Mumbai', vehicle_class: 'Car', fuel: 'Petrol', year: 2023, month: 1, value: 15000 },
-      { state: 'Maharashtra', district: 'Mumbai', vehicle_class: 'Motorcycle', fuel: 'Petrol', year: 2023, month: 1, value: 25000 },
-      { state: 'Maharashtra', district: 'Pune', vehicle_class: 'Car', fuel: 'Diesel', year: 2023, month: 1, value: 8000 },
-      { state: 'Delhi', district: 'New Delhi', vehicle_class: 'Car', fuel: 'CNG', year: 2023, month: 1, value: 12000 },
-      { state: 'Karnataka', district: 'Bangalore', vehicle_class: 'Bus', fuel: 'Diesel', year: 2023, month: 2, value: 800 },
-      { state: 'Tamil Nadu', district: 'Chennai', vehicle_class: 'Truck', fuel: 'Diesel', year: 2023, month: 2, value: 1200 },
-    ];
+    // Enhanced mock data with more realistic patterns and larger datasets
+    this.vahanData = Array.from({ length: 500 }, (_, i) => ({
+      state: ['Maharashtra', 'Delhi', 'Karnataka', 'Tamil Nadu', 'Gujarat'][i % 5],
+      district: ['Mumbai', 'New Delhi', 'Bangalore', 'Chennai', 'Ahmedabad'][i % 5],
+      vehicle_class: ['Car', 'Motorcycle', 'Bus', 'Truck', 'SUV'][i % 5],
+      fuel: ['Petrol', 'Diesel', 'CNG', 'Electric', 'Hybrid'][i % 5],
+      year: 2020 + (i % 4),
+      month: 1 + (i % 12),
+      value: Math.floor(Math.random() * 50000) + 1000
+    }));
 
-    this.idspData = [
-      { 
-        state: 'Maharashtra', district: 'Mumbai', disease_illness_name: 'Dengue', 
-        outbreak_starting_date: new Date('2023-01-15'), reporting_date: new Date('2023-01-20'), 
-        cases: 150, deaths: 2, status: 'Active' 
-      },
-      { 
-        state: 'Delhi', district: 'New Delhi', disease_illness_name: 'Malaria', 
-        outbreak_starting_date: new Date('2023-02-01'), reporting_date: new Date('2023-02-05'), 
-        cases: 89, deaths: 1, status: 'Controlled' 
-      },
-    ];
+    this.idspData = Array.from({ length: 300 }, (_, i) => ({
+      state: ['Maharashtra', 'Delhi', 'Karnataka', 'Tamil Nadu', 'Gujarat'][i % 5],
+      district: ['Mumbai', 'New Delhi', 'Bangalore', 'Chennai', 'Ahmedabad'][i % 5],
+      disease_illness_name: ['COVID-19', 'Dengue', 'Malaria', 'Tuberculosis', 'Pneumonia'][i % 5],
+      outbreak_starting_date: new Date(2020 + (i % 4), i % 12, 1),
+      reporting_date: new Date(2020 + (i % 4), i % 12, 15),
+      cases: Math.floor(Math.random() * 1000) + 10,
+      deaths: Math.floor(Math.random() * 50) + 1,
+      status: ['Active', 'Controlled', 'Resolved'][i % 3]
+    }));
 
-    this.populationData = [
-      { state: 'Maharashtra', district: 'Mumbai', gender: 'Male', year: 2023, value: 6200000 },
-      { state: 'Maharashtra', district: 'Mumbai', gender: 'Female', year: 2023, value: 5800000 },
-      { state: 'Delhi', district: 'New Delhi', gender: 'Male', year: 2023, value: 8900000 },
-      { state: 'Delhi', district: 'New Delhi', gender: 'Female', year: 2023, value: 8100000 },
-    ];
+    this.populationData = Array.from({ length: 400 }, (_, i) => ({
+      state: ['Maharashtra', 'Delhi', 'Karnataka', 'Tamil Nadu', 'Gujarat'][i % 5],
+      district: ['Mumbai', 'New Delhi', 'Bangalore', 'Chennai', 'Ahmedabad'][i % 5],
+      gender: ['Male', 'Female', 'Other'][i % 3],
+      age_group: ['0-14', '15-24', '25-54', '55-64', '65+'][i % 5],
+      year: 2020 + (i % 4),
+      value: Math.floor(Math.random() * 1000000) + 10000
+    }));
 
-    this.aqiData = [
-      { 
-        state: 'Maharashtra', area: 'Mumbai Central', date: new Date('2023-01-15'), 
-        aqi_value: 156, air_quality_status: 'Moderate', prominent_pollutants: 'PM2.5, NO2', 
-        number_of_monitoring_stations: 5 
-      },
-      { 
-        state: 'Delhi', area: 'Connaught Place', date: new Date('2023-01-15'), 
-        aqi_value: 289, air_quality_status: 'Poor', prominent_pollutants: 'PM2.5, PM10', 
-        number_of_monitoring_stations: 8 
-      },
-    ];
+    this.aqiData = Array.from({ length: 600 }, (_, i) => ({
+      state: ['Maharashtra', 'Delhi', 'Karnataka', 'Tamil Nadu', 'Gujarat'][i % 5],
+      area: ['Mumbai', 'New Delhi', 'Bangalore', 'Chennai', 'Ahmedabad'][i % 5],
+      date: new Date(2020 + (i % 4), i % 12, 1 + (i % 28)),
+      aqi_value: Math.floor(Math.random() * 500) + 50,
+      air_quality_status: ['Good', 'Moderate', 'Poor', 'Very Poor', 'Severe'][Math.floor(Math.random() * 5)],
+      prominent_pollutants: ['PM2.5', 'PM10', 'NO2', 'SO2', 'CO'][i % 5],
+      number_of_monitoring_stations: Math.floor(Math.random() * 20) + 1
+    }));
 
-    this.isLoaded = true;
-    console.log('DataManager: Mock data loaded successfully');
+    console.log('DataManager: Mock data loaded successfully:', {
+      vahan: this.vahanData.length,
+      idsp: this.idspData.length,
+      population: this.populationData.length,
+      aqi: this.aqiData.length
+    });
   }
 
   // Data access methods with validation
