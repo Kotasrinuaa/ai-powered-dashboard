@@ -18,6 +18,8 @@ export class CSVLoader {
     
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
+        console.log(`CSVLoader: Attempting to load ${filePath} (attempt ${attempt}/${maxRetries})`);
+        
         const response = await fetch(filePath, {
           method: 'GET',
           headers: {
@@ -36,14 +38,17 @@ export class CSVLoader {
           throw new Error('Empty or invalid CSV content');
         }
         
+        console.log(`CSVLoader: Successfully loaded ${filePath} (${text.length} characters)`);
         return text;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        console.warn(`Attempt ${attempt} failed for ${filePath}:`, lastError.message);
+        console.warn(`CSVLoader: Attempt ${attempt} failed for ${filePath}:`, lastError.message);
         
         if (attempt < maxRetries) {
           // Exponential backoff
-          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+          const delay = Math.pow(2, attempt) * 1000;
+          console.log(`CSVLoader: Waiting ${delay}ms before retry...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
         }
       }
     }
@@ -58,30 +63,36 @@ export class CSVLoader {
   ): T[] {
     // Check cache first
     if (dataCache.has(cacheKey)) {
+      console.log(`CSVLoader: Using cached data for ${cacheKey}`);
       return dataCache.get(cacheKey) as T[];
     }
     
     if (!csvContent.trim()) {
+      console.warn(`CSVLoader: Empty CSV content for ${cacheKey}`);
       return [];
     }
     
     try {
+      console.log(`CSVLoader: Parsing CSV for ${cacheKey} (${csvContent.length} characters)`);
+      
       const result = Papa.parse(csvContent, PAPA_CONFIG);
       
       if (result.errors.length > 0) {
-        console.warn('CSV parsing warnings:', result.errors);
+        console.warn(`CSVLoader: CSV parsing warnings for ${cacheKey}:`, result.errors);
       }
       
       const transformedData = result.data
         .map(transformer)
         .filter((item): item is T => item !== null);
       
+      console.log(`CSVLoader: Successfully parsed ${transformedData.length} records for ${cacheKey}`);
+      
       // Cache the result
       dataCache.set(cacheKey, transformedData);
       
       return transformedData;
     } catch (error) {
-      console.error('Error parsing CSV:', error);
+      console.error(`CSVLoader: Error parsing CSV for ${cacheKey}:`, error);
       return [];
     }
   }

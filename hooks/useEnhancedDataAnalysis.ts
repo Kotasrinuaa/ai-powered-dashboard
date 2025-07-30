@@ -30,10 +30,19 @@ export function useEnhancedDataAnalysis() {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        await dataManager.loadAllData();
         setError(null);
+        
+        // Add timeout to prevent infinite loading
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Data loading timeout - please refresh the page')), 45000) // 45 second timeout
+        );
+        
+        const loadPromise = dataManager.loadAllData();
+        await Promise.race([loadPromise, timeoutPromise]);
+        
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load data');
+        console.error('useEnhancedDataAnalysis: Error loading data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load data - please refresh the page');
       } finally {
         setIsLoading(false);
       }

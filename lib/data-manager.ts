@@ -60,13 +60,18 @@ export class DataManager {
       console.log('DataManager: Starting data load...');
       const startTime = performance.now();
       
-      // Use the optimized CSV loader
-      const data = await CSVLoader.loadAllData();
+      // Use the optimized CSV loader with timeout
+      const loadPromise = CSVLoader.loadAllData();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Data loading timeout')), 30000) // 30 second timeout
+      );
       
-      this.vahanData = data.vahan;
-      this.idspData = data.idsp;
-      this.populationData = data.population;
-      this.aqiData = data.aqi;
+      const data = await Promise.race([loadPromise, timeoutPromise]) as any;
+      
+      this.vahanData = data.vahan || [];
+      this.idspData = data.idsp || [];
+      this.populationData = data.population || [];
+      this.aqiData = data.aqi || [];
 
       this.isLoaded = true;
       
@@ -78,6 +83,13 @@ export class DataManager {
         aqi: this.aqiData.length,
         totalRecords: this.vahanData.length + this.idspData.length + this.populationData.length + this.aqiData.length
       });
+      
+      // If no data was loaded, use mock data
+      if (this.vahanData.length === 0 && this.idspData.length === 0 && 
+          this.populationData.length === 0 && this.aqiData.length === 0) {
+        console.warn('DataManager: No data loaded, using mock data as fallback');
+        this.loadMockData();
+      }
     } catch (error) {
       console.error('DataManager: Error loading data:', error);
       // Use fallback mock data
