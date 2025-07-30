@@ -38,7 +38,16 @@ import {
 
 export default function DashboardClient() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const [componentError, setComponentError] = useState<string | null>(null);
+  
+  useEffect(() => { 
+    try {
+      setMounted(true); 
+    } catch (error) {
+      console.error('DashboardClient: Error in mount effect:', error);
+      setComponentError(error instanceof Error ? error.message : 'Mount error');
+    }
+  }, []);
 
   // Call all hooks before any early returns to follow Rules of Hooks
   const { 
@@ -56,6 +65,34 @@ export default function DashboardClient() {
   } = useEnhancedDataAnalysis();
 
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Log component state for debugging
+  useEffect(() => {
+    console.log('DashboardClient: Component state:', {
+      mounted,
+      isLoading,
+      error,
+      hasData: !!data,
+      hasRawData: !!rawData,
+      componentError
+    });
+  }, [mounted, isLoading, error, data, rawData, componentError]);
+
+  if (componentError) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <AlertTriangle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <h2 className="text-2xl font-semibold mb-2 text-red-400">Component Error</h2>
+          <p className="text-gray-400 mb-4">{componentError}</p>
+          <Button onClick={() => window.location.reload()} className="bg-blue-600 hover:bg-blue-700">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (!mounted) {
     return (

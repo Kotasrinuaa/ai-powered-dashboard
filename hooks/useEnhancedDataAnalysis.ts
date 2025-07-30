@@ -6,8 +6,24 @@ import { DataManager } from '@/lib/data-manager';
 import { AIInsightsEngine, InsightCard, DataSummary } from '@/lib/ai-insights';
 
 export function useEnhancedDataAnalysis() {
-  const [dataManager] = useState(() => DataManager.getInstance());
-  const [aiEngine] = useState(() => new AIInsightsEngine());
+  const [dataManager] = useState(() => {
+    try {
+      return DataManager.getInstance();
+    } catch (error) {
+      console.error('useEnhancedDataAnalysis: Error creating DataManager:', error);
+      throw error;
+    }
+  });
+  
+  const [aiEngine] = useState(() => {
+    try {
+      return new AIInsightsEngine();
+    } catch (error) {
+      console.error('useEnhancedDataAnalysis: Error creating AIInsightsEngine:', error);
+      throw error;
+    }
+  });
+  
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -52,28 +68,60 @@ export function useEnhancedDataAnalysis() {
   }, [dataManager]);
 
   // Get raw data
-  const rawData = useMemo(() => ({
-    vahan: dataManager.getVahanData(),
-    idsp: dataManager.getIdspData(),
-    population: dataManager.getPopulationData(),
-    aqi: dataManager.getAqiData(),
-  }), [dataManager, isLoading]);
+  const rawData = useMemo(() => {
+    try {
+      return {
+        vahan: dataManager.getVahanData(),
+        idsp: dataManager.getIdspData(),
+        population: dataManager.getPopulationData(),
+        aqi: dataManager.getAqiData(),
+      };
+    } catch (error) {
+      console.error('useEnhancedDataAnalysis: Error getting raw data:', error);
+      return {
+        vahan: [],
+        idsp: [],
+        population: [],
+        aqi: [],
+      };
+    }
+  }, [dataManager, isLoading]);
 
   // Available filter options
-  const availableOptions = useMemo(() => ({
-    states: dataManager.getUniqueValues([...rawData.vahan, ...rawData.idsp, ...rawData.population, ...rawData.aqi], 'state'),
-    districts: dataManager.getUniqueValues([...rawData.vahan, ...rawData.idsp, ...rawData.population], 'district'),
-    areas: dataManager.getUniqueValues(rawData.aqi, 'area'),
-    vehicleClasses: dataManager.getUniqueValues(rawData.vahan, 'vehicle_class'),
-    fuelTypes: dataManager.getUniqueValues(rawData.vahan, 'fuel'),
-    diseases: dataManager.getUniqueValues(rawData.idsp, 'disease_illness_name'),
-    statuses: dataManager.getUniqueValues(rawData.idsp, 'status'),
-    genders: dataManager.getUniqueValues(rawData.population, 'gender'),
-    pollutants: dataManager.getUniqueValues(rawData.aqi, 'prominent_pollutants'),
-    aqiStatuses: dataManager.getUniqueValues(rawData.aqi, 'air_quality_status'),
-    years: dataManager.getUniqueNumbers([...rawData.vahan, ...rawData.population], 'year'),
-    months: dataManager.getUniqueNumbers(rawData.vahan, 'month'),
-  }), [rawData]);
+  const availableOptions = useMemo(() => {
+    try {
+      return {
+        states: dataManager.getUniqueValues([...rawData.vahan, ...rawData.idsp, ...rawData.population, ...rawData.aqi], 'state'),
+        districts: dataManager.getUniqueValues([...rawData.vahan, ...rawData.idsp, ...rawData.population], 'district'),
+        areas: dataManager.getUniqueValues(rawData.aqi, 'area'),
+        vehicleClasses: dataManager.getUniqueValues(rawData.vahan, 'vehicle_class'),
+        fuelTypes: dataManager.getUniqueValues(rawData.vahan, 'fuel'),
+        diseases: dataManager.getUniqueValues(rawData.idsp, 'disease_illness_name'),
+        statuses: dataManager.getUniqueValues(rawData.idsp, 'status'),
+        genders: dataManager.getUniqueValues(rawData.population, 'gender'),
+        pollutants: dataManager.getUniqueValues(rawData.aqi, 'prominent_pollutants'),
+        aqiStatuses: dataManager.getUniqueValues(rawData.aqi, 'air_quality_status'),
+        years: dataManager.getUniqueNumbers([...rawData.vahan, ...rawData.population], 'year'),
+        months: dataManager.getUniqueNumbers(rawData.vahan, 'month'),
+      };
+    } catch (error) {
+      console.error('useEnhancedDataAnalysis: Error getting available options:', error);
+      return {
+        states: [],
+        districts: [],
+        areas: [],
+        vehicleClasses: [],
+        fuelTypes: [],
+        diseases: [],
+        statuses: [],
+        genders: [],
+        pollutants: [],
+        aqiStatuses: [],
+        years: [],
+        months: [],
+      };
+    }
+  }, [rawData, dataManager]);
 
   // Apply filters to data
   const filteredData = useMemo(() => {
