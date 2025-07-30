@@ -16,12 +16,8 @@ export class CSVLoader {
   private static async loadCSVWithRetry(filePath: string, maxRetries = 3): Promise<string> {
     let lastError: Error | null = null;
     
-    console.log(`CSVLoader: Attempting to load ${filePath}`);
-    
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        console.log(`CSVLoader: Attempt ${attempt} for ${filePath}`);
-        
         const response = await fetch(filePath, {
           method: 'GET',
           headers: {
@@ -29,39 +25,30 @@ export class CSVLoader {
           },
         });
         
-        console.log(`CSVLoader: Response status for ${filePath}:`, response.status);
-        
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
         
         const text = await response.text();
         
-        console.log(`CSVLoader: Content length for ${filePath}:`, text.length);
-        
         // Validate that we got actual CSV content
         if (!text.trim() || text.trim().length < 10) {
           throw new Error('Empty or invalid CSV content');
         }
         
-        console.log(`CSVLoader: Successfully loaded ${filePath}`);
         return text;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        console.error(`CSVLoader: Attempt ${attempt} failed for ${filePath}:`, lastError.message);
+        console.warn(`Attempt ${attempt} failed for ${filePath}:`, lastError.message);
         
         if (attempt < maxRetries) {
           // Exponential backoff
-          const delay = Math.pow(2, attempt) * 1000;
-          console.log(`CSVLoader: Waiting ${delay}ms before retry...`);
-          await new Promise(resolve => setTimeout(resolve, delay));
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
         }
       }
     }
     
-    const errorMessage = `Failed to load ${filePath} after ${maxRetries} attempts: ${lastError?.message}`;
-    console.error(`CSVLoader: ${errorMessage}`);
-    throw new Error(errorMessage);
+    throw new Error(`Failed to load ${filePath} after ${maxRetries} attempts: ${lastError?.message}`);
   }
 
   private static parseCSVWithCache<T>(
