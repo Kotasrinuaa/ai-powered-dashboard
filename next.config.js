@@ -4,8 +4,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
-  // Optimize output
-  swcMinify: true,
+  // Disable SWC minification temporarily to avoid syntax errors
+  swcMinify: false,
   // Add better caching headers
   async headers() {
     return [
@@ -28,34 +28,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-  // Optimize webpack for better chunk loading
-  webpack: (config, { dev, isServer }) => {
-    if (!dev && !isServer) {
-      // Optimize chunk splitting for production
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          vendor: {
-            name: 'vendor',
-            chunks: 'all',
-            test: /node_modules/,
-            priority: 20,
-          },
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
-            priority: 10,
-            reuseExistingChunk: true,
-            enforce: true,
-          },
-        },
-      };
-    }
-    return config;
   },
 };
 

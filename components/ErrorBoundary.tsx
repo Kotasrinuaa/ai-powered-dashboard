@@ -38,12 +38,15 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Error message:', error.message);
     console.error('Component stack:', errorInfo.componentStack);
     
-    // Handle chunk loading errors specifically
-    if (error.name === 'ChunkLoadError' || error.message.includes('Loading chunk')) {
-      console.error('Chunk loading error detected - checking reload count...');
+    // Handle different types of errors
+    const isChunkError = error.name === 'ChunkLoadError' || error.message.includes('Loading chunk');
+    const isSyntaxError = error.name === 'SyntaxError' || error.message.includes('missing )');
+    
+    if (isChunkError || isSyntaxError) {
+      console.error(`${isSyntaxError ? 'Syntax' : 'Chunk loading'} error detected - checking reload count...`);
       
       const currentReloadCount = this.state.reloadCount;
-      const maxReloads = 2; // Maximum 2 reload attempts
+      const maxReloads = 1; // Reduce to 1 reload attempt for syntax errors
       
       if (currentReloadCount < maxReloads) {
         console.error(`Attempting reload ${currentReloadCount + 1}/${maxReloads}...`);
@@ -84,6 +87,22 @@ export class ErrorBoundary extends Component<Props, State> {
     window.location.reload();
   };
 
+  handleClearCache = () => {
+    // Clear browser cache and reload
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        names.forEach(name => {
+          caches.delete(name);
+        });
+      });
+    }
+    // Clear localStorage and sessionStorage
+    localStorage.clear();
+    sessionStorage.clear();
+    // Reload the page
+    window.location.reload();
+  };
+
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
@@ -92,23 +111,28 @@ export class ErrorBoundary extends Component<Props, State> {
 
       const isChunkError = this.state.error?.name === 'ChunkLoadError' || 
                           this.state.error?.message?.includes('Loading chunk');
+      const isSyntaxError = this.state.error?.name === 'SyntaxError' || 
+                           this.state.error?.message?.includes('missing )');
 
       // If we're in a reload loop, show a different message
-      const isInReloadLoop = this.state.reloadCount >= 2;
+      const isInReloadLoop = this.state.reloadCount >= 1;
 
       return (
         <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
           <div className="text-center max-w-md">
             <AlertTriangle className="w-16 h-16 text-red-400 mx-auto mb-4" />
             <h2 className="text-2xl font-semibold mb-2 text-red-400">
-              {isInReloadLoop ? 'Persistent Loading Issue' : 'Loading Issue Detected'}
+              {isSyntaxError ? 'JavaScript Syntax Error' : 
+               isInReloadLoop ? 'Persistent Loading Issue' : 'Loading Issue Detected'}
             </h2>
             <p className="text-gray-400 mb-6">
-              {isInReloadLoop 
-                ? 'We\'re experiencing persistent loading issues. This might be due to browser cache or network problems. Please try clearing your browser cache or using a different browser.'
-                : isChunkError 
-                  ? 'We detected a loading issue with the dashboard. The page will automatically reload to fix this.'
-                  : 'We encountered an unexpected error while loading the dashboard. This might be due to a temporary issue with data loading.'
+              {isSyntaxError 
+                ? 'A JavaScript syntax error was detected. This might be due to a corrupted cache or browser issue.'
+                : isInReloadLoop 
+                  ? 'We\'re experiencing persistent loading issues. This might be due to browser cache or network problems. Please try clearing your browser cache or using a different browser.'
+                  : isChunkError 
+                    ? 'We detected a loading issue with the dashboard. The page will automatically reload to fix this.'
+                    : 'We encountered an unexpected error while loading the dashboard. This might be due to a temporary issue with data loading.'
               }
             </p>
             
@@ -137,6 +161,13 @@ export class ErrorBoundary extends Component<Props, State> {
                     Try Again
                   </Button>
                   <Button 
+                    onClick={this.handleClearCache} 
+                    className="bg-orange-600 hover:bg-orange-700"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Clear Cache & Reload
+                  </Button>
+                  <Button 
                     onClick={this.handleManualReload} 
                     className="bg-green-600 hover:bg-green-700"
                   >
@@ -162,7 +193,7 @@ export class ErrorBoundary extends Component<Props, State> {
               )}
             </div>
             
-            {isInReloadLoop && (
+            {(isInReloadLoop || isSyntaxError) && (
               <div className="mt-4 p-3 bg-yellow-900/20 border border-yellow-600/30 rounded text-sm">
                 <p className="text-yellow-400 mb-2">💡 Troubleshooting Tips:</p>
                 <ul className="text-yellow-300 text-left space-y-1">
@@ -170,6 +201,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   <li>• Try a different browser</li>
                   <li>• Check your internet connection</li>
                   <li>• Disable browser extensions</li>
+                  {isSyntaxError && <li>• Try incognito/private browsing mode</li>}
                 </ul>
               </div>
             )}
