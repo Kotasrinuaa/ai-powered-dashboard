@@ -4,7 +4,7 @@ A comprehensive, interactive dashboard for analyzing Vehicle, Health, Population
 
 ## 🚀 Live Demo
 
-**Deployed on Vercel**: [https://entiredashboard2.vercel.app](https://entiredashboard2.vercel.app)
+**Deployed on Vercel**: [https://entiredashboard.vercel.app](https://entiredashboard.vercel.app)
 
 ## ✨ Features
 
